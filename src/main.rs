@@ -31,7 +31,6 @@ async fn main() {
         .serve(routes_all.into_make_service())
         .await
         .unwrap();
-        
 
     // endregion: --- Start Server
 }
