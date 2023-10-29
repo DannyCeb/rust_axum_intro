@@ -1,0 +1,13 @@
+#![allow(unused)] // For beginning only
+
+// cargo watch -q -c -w tests/ -x "test -q quick_dev -- --nocapture"
+use anyhow::Result;
+
+#[tokio::test]
+async fn quick_dev() -> Result<()> {
+    let hc = httpc_test::new_client("http://localhost:8080")?;
+
+    hc.do_get("/hello").await?.print().await?;
+
+    Ok(())
+}
