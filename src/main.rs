@@ -7,7 +7,7 @@ use axum::routing::{get, get_service};
 use axum::{middleware, Router};
 use rust_axum_intro::error::{Error, Result};
 use rust_axum_intro::model::ModelController;
-use rust_axum_intro::web::my_auth::mw_require_auth;
+use rust_axum_intro::web::mw_auth::mw_require_auth;
 use rust_axum_intro::web::{self, routes_login};
 use serde::Deserialize;
 use std::net::SocketAddr;
