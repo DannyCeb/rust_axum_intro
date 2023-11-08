@@ -2,13 +2,17 @@
 //! (With mock-store layer )
 //!
 
-use crate::error::{Error, Result};
+use crate::{
+    ctx::Ctx,
+    error::{Error, Result},
+};
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Ticket {
     pub id: u64,
+    pub cid: u64,
     pub title: String,
 }
 
@@ -31,12 +35,13 @@ impl ModelController {
 }
 
 impl ModelController {
-    pub async fn create_ticket(&self, ticket_fc: TicketForCreate) -> Result<Ticket> {
+    pub async fn create_ticket(&self, ticket_fc: TicketForCreate, ctx: Ctx) -> Result<Ticket> {
         let mut store = self.tickets_store.lock().unwrap();
         let id = store.len() as u64;
 
         let ticket = Ticket {
             id,
+            cid: ctx.user_id(),
             title: ticket_fc.title,
         };
 
@@ -45,7 +50,7 @@ impl ModelController {
         Ok(ticket)
     }
 
-    pub async fn list_tickets(&self) -> Result<Vec<Ticket>> {
+    pub async fn list_tickets(&self, _ctx: Ctx) -> Result<Vec<Ticket>> {
         Ok(self
             .tickets_store
             .lock()
@@ -55,7 +60,7 @@ impl ModelController {
             .collect())
     }
 
-    pub async fn delete_ticket(&self, id: u64) -> Result<Ticket> {
+    pub async fn delete_ticket(&self, id: u64, _ctx: Ctx) -> Result<Ticket> {
         let ticket = self
             .tickets_store
             .lock()
